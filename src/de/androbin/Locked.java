@@ -40,7 +40,7 @@ public final class Locked<T> {
     accept( lock.readLock(), consumer );
   }
   
-  public <S> S read( final Function<T, S> function ) {
+  public <S> S readBack( final Function<T, S> function ) {
     return apply( lock.readLock(), function );
   }
   
@@ -48,7 +48,7 @@ public final class Locked<T> {
     accept( lock.writeLock(), consumer );
   }
   
-  public <S> S write( final Function<T, S> function ) {
+  public <S> S writeBack( final Function<T, S> function ) {
     return apply( lock.writeLock(), function );
   }
 }
