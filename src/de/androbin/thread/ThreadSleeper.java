@@ -1,4 +1,4 @@
-package de.androbin;
+package de.androbin.thread;
 
 public final class ThreadSleeper {
   private int nanosLeft;

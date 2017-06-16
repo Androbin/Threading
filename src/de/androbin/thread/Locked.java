@@ -1,4 +1,4 @@
-package de.androbin;
+package de.androbin.thread;
 
 import java.util.concurrent.locks.*;
 import java.util.function.*;
