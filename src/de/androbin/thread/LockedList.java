@@ -53,4 +53,8 @@ public final class LockedList<E> {
   public int size() {
     return list.readBack( List::size );
   }
+  
+  public E tryGet( final int index ) {
+    return list.readBack( list -> index < list.size() ? list.get( index ) : null );
+  }
 }
