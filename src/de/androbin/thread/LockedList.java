@@ -3,7 +3,7 @@ package de.androbin.thread;
 import java.util.*;
 import java.util.function.*;
 
-public final class LockedList<E> {
+public final class LockedList<E> implements Iterable<E> {
   private final Locked<List<E>> list;
   
   public LockedList() {
@@ -14,19 +14,20 @@ public final class LockedList<E> {
     this.list = new Locked<>( list );
   }
   
-  public void add( final E element ) {
-    list.write( list -> list.add( element ) );
+  public boolean add( final E element ) {
+    return list.writeBack( list -> list.add( element ) );
   }
   
   public void clear() {
     list.write( List::clear );
   }
   
-  public boolean contains( final E element ) {
-    return list.readBack( list -> list.contains( element ) );
+  public boolean contains( final Object o ) {
+    return list.readBack( list -> list.contains( o ) );
   }
   
-  public void forEach( final Consumer<E> action ) {
+  @ Override
+  public void forEach( final Consumer< ? super E> action ) {
     list.read( list -> list.forEach( action ) );
   }
   
@@ -38,16 +39,33 @@ public final class LockedList<E> {
     return list.readBack( List::isEmpty );
   }
   
-  public void remove( final int index ) {
-    list.write( list -> list.remove( index ) );
+  @ Override
+  public Iterator<E> iterator() {
+    return new Iterator<E>() {
+      private int index;
+      
+      @ Override
+      public boolean hasNext() {
+        return index < size();
+      }
+      
+      @ Override
+      public E next() {
+        return get( index++ );
+      }
+    };
   }
   
-  public void remove( final E element ) {
-    list.write( list -> list.remove( element ) );
+  public E remove( final int index ) {
+    return list.writeBack( list -> list.remove( index ) );
   }
   
-  public void set( final int index, final E element ) {
-    list.write( list -> list.set( index, element ) );
+  public boolean remove( final Object o ) {
+    return list.writeBack( list -> list.remove( o ) );
+  }
+  
+  public E set( final int index, final E element ) {
+    return list.writeBack( list -> list.set( index, element ) );
   }
   
   public int size() {
